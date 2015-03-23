@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 source "$(dirname $0)/../common/functions"
 set -eo pipefail; [[ $DOKKU_TRACE  ]] && set -x
+set +e
 
 APP="$1"
 APP_ROOT="$DOKKU_ROOT/$APP"
