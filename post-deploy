@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+source "$(dirname $0)/../common/functions"
+set -eo pipefail; [[ $DOKKU_TRACE  ]] && set -x
+
+APP="$1"
+APP_ROOT="$DOKKU_ROOT/$APP"
+API_KEY=$(dokku config:get "$APP" AIRBRAKE_API_KEY)
+
+if [[ $API_KEY ]]; then
+  cd $APP_ROOT
+  REPO_URL=$((dokku config:get "$APP" AIRBRAKE_REPO_URL) || (echo "dokku@$(cat $DOKKU_ROOT/VHOST):$APP"))
+  BASE_URL=$((dokku config:get "$APP" AIRBRAKE_BASE_URL) || (echo 'https://airbrake.io'))
+  RAILS_ENV=$((dokku config:get "$APP" RACK_ENV) || (dokku config:get "$APP" RAILS_ENV) || (echo 'production'))
+  GIT_REV=$(git log -n1 --pretty='format:%H')
+  GIT_MESSAGE=$(git log -n1 --pretty='format:%s')
+  dokku_log_info1 "Notifying airbrake..."
+  curl "$BASE_URL/deploys.txt" --silent \
+    --data "api_key=$API_KEY" \
+    --data "deploy[local_username]=Dokku" \
+    --data "deploy[rails_env]=$RAILS_ENV" \
+    --data "deploy[scm_repository]=$REPO_URL" \
+    --data "deploy[scm_revision]=$GIT_REV" \
+    --data "deploy[message]=$GIT_MESSAGE" > /dev/null
+  exit 0
+fi
