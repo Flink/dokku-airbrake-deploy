@@ -9,11 +9,11 @@ API_KEY=$(dokku config:get "$APP" AIRBRAKE_API_KEY)
 
 if [[ $API_KEY ]]; then
   cd $APP_ROOT
-  REPO_URL=$((dokku config:get "$APP" AIRBRAKE_REPO_URL) || (echo "dokku@$(cat $DOKKU_ROOT/VHOST):$APP"))
-  BASE_URL=$((dokku config:get "$APP" AIRBRAKE_BASE_URL) || (echo 'https://airbrake.io'))
-  RAILS_ENV=$((dokku config:get "$APP" RACK_ENV) || (dokku config:get "$APP" RAILS_ENV) || (echo 'production'))
-  GIT_REV=$(git log -n1 --pretty='format:%H')
-  GIT_MESSAGE=$(git log -n1 --pretty='format:%s')
+  REPO_URL=$(dokku config:get "$APP" AIRBRAKE_REPO_URL || echo "dokku@$(cat $DOKKU_ROOT/VHOST):$APP")
+  BASE_URL=$(dokku config:get "$APP" AIRBRAKE_BASE_URL || echo 'https://airbrake.io')
+  RAILS_ENV=$(dokku config:get "$APP" RACK_ENV || dokku config:get "$APP" RAILS_ENV || echo 'production')
+  GIT_REV=$(git log -n1 --pretty='format:%H' 2> /dev/null || printf '0%.0s' {1..41})
+  GIT_MESSAGE=$(git log -n1 --pretty='format:%s' 2> /dev/null || echo '')
   dokku_log_info1 "Notifying airbrake..."
   curl "$BASE_URL/deploys.txt" --silent \
     --data "api_key=$API_KEY" \
