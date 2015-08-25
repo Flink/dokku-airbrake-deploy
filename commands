@@ -14,7 +14,7 @@ case "$1" in
 
   help)
     cat && cat<<EOF
-    airbrake-deploy <app>                           Display the current airbrake deploy hook status of app
+    airbrake-deploy <app>, Display the current airbrake deploy hook status of app
 EOF
     ;;
 
