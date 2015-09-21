@@ -4,20 +4,24 @@ dokku-airbrake-deploy is a plugin for [dokku][dokku] that notifies [Airbrake][ai
 
 ## Requirements
 
-`curl` is required and will be installed when calling `dokku plugins-install-dependencies`.
+`curl` is required and will be installed when calling `dokku plugins-install`.
 
 ## Installation
 
 ```sh
+# dokku 0.3.26
 $ sudo git clone https://github.com/Flink/dokku-airbrake-deploy.git /var/lib/dokku/plugins/airbrake-deploy
-$ dokku plugins-install-dependencies
+$ dokku plugins-install
+
+# dokku 0.4+
+$ dokku plugin:install https://github.com/Flink/dokku-airbrake-deploy.git
 ```
 
 ## Commands
 
 ```
 $ dokku help
-    airbrake-deploy <app>                           Display the current airbrake deploy hook status of app
+    airbrake-deploy <app>   Display the current airbrake deploy hook status of app
 ```
 
 ## Usage
