@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-source "$PLUGIN_PATH/common/functions"
+PLUGIN_BASE_PATH="$PLUGIN_PATH"
+if [[ -n $DOKKU_API_VERSION ]]; then
+  PLUGIN_BASE_PATH="$PLUGIN_ENABLED_PATH"
+fi
+source "$PLUGIN_BASE_PATH/common/functions"
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 set +e
 
